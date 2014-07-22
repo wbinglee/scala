@@ -1,6 +1,6 @@
 package recfun
 import common._
-import scala.collection.mutable.Stack
+import scala.collection.immutable.Stack
 
 object Main {
   def main(args: Array[String]) {
@@ -31,7 +31,7 @@ object Main {
         if (c=='('){
           loop(stack.push(c),cs.tail)
         }else if (c==')'){
-          if(stack.isEmpty || stack.pop()!='(') false else loop(stack,cs.tail)
+          if(stack.isEmpty || stack.top!='(') false else loop(stack.pop,cs.tail)
         }else {
           loop(stack,cs.tail)
         }
@@ -69,6 +69,8 @@ object Main {
       }
     }
     val sortedCoins = coins.sortWith(_ > _)
-    loop(money,sortedCoins.head,sortedCoins.tail)
+    if(sortedCoins.isEmpty) 0
+    else 
+      loop(money,sortedCoins.head,sortedCoins.tail)
   }
 }
