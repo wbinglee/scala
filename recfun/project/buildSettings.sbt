@@ -1,4 +1,4 @@
-resolvers += "Spray Repository" at "http://repo.spray.cc/"
+resolvers += "Spray Repository" at "http://repo.spray.io"
 
 libraryDependencies += "net.databinder" %% "dispatch-http" % "0.8.8"
 

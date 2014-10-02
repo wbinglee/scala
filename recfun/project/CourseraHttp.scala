@@ -9,6 +9,7 @@ import scalaz.Scalaz.{mkIdentity, ValidationNEL}
 import Settings._
 import sbt._
 
+
 case class JsonSubmission(api_state: String, user_info: JsValue, submission_metadata: JsValue, solutions: JsValue, submission_encoding: String, submission: String)
 //case class JsonQueueResult(submission: JsonSubmission)
 object SubmitJsonProtocol extends DefaultJsonProtocol {
@@ -59,17 +60,19 @@ object DeprectaionForwarder {
 }
 
 object CourseraHttp {
-  private lazy val http = new Http with NoLogging {    
-
-    override def make_client = DeprectaionForwarder.FwdClass.insecureClientForwarder(credentials)
+  private lazy val http = new Http with NoLogging
+  private lazy val insecureHttp = new Http with NoLogging { 
+      override def make_client = DeprectaionForwarder.FwdClass.insecureClientForwarder(credentials)
   }
+   
 
   private def executeRequest[T](req: Request)(parse: String => ValidationNEL[String, T]): ValidationNEL[String, T] = {
     try {
-      http(req >- { res =>
-        parse(res)
-      })
-    } catch {
+      try http(req >- { res => parse(res) }) catch {
+        case ex: javax.net.ssl.SSLPeerUnverifiedException =>
+          insecureHttp(req >- { res => parse(res) }) // try the insecure version
+      }
+    } catch {      
       case ex: IOException =>
         ("Connection failed\n"+ ex.toString()).failNel
       case StatusCode(code, message) =>
