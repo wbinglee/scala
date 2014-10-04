@@ -77,6 +77,10 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+    val s4 = singletonSet(4)
+    val s5 = singletonSet(5)
+    val s7 = singletonSet(7)
+    val s1000 = singletonSet(1000)
   }
 
   /**
@@ -86,7 +90,7 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
@@ -101,12 +105,56 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+  
+  test("forall test"){
+    new TestSets {
+      val s = union(s2, s4)
+      def p(a: Int): Boolean = {
+        a % 2 == 0
+      }
+      assert(forall(s, p), "forall should pass")
+    }
+  }
+  
+  test("exist test"){
+    new TestSets {
+      val s = union(s2, s4)
+      def p(a: Int): Boolean = {
+        a == 2
+      }
+      assert(exists(s, p), "should exists")
+    }
+
+  }
+  
+  test("should not exist"){
+   new TestSets {
+      val s = union(s2, s4)
+      def p(a: Int): Boolean = {
+        a == 3
+      }
+      assert(!exists(s, p), "should not exists")
+    }
+  }
+  
+  
+  test("map test"){
+    new TestSets {
+      val s = union(union(union(union(union(s1, s3), s4),s5),s7),s1000)
+      def mapf(a: Int):Int = {
+        a -1
+      }
+      val maps = map(s,mapf)
+      printSet(maps)
+      assert( FunSets.toString(maps) === "{0,2,3,4,6,999}", "Map")
     }
   }
 }
