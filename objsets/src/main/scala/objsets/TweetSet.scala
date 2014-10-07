@@ -77,8 +77,7 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-  def descendingByRetweet: TweetList = ???
-
+  def descendingByRetweet: TweetList
 
   /**
    * The following methods are already implemented
@@ -106,6 +105,7 @@ abstract class TweetSet {
    * This method takes a function and applies it to every element in the set.
    */
   def foreach(f: Tweet => Unit): Unit
+  
 }
 
 class Empty extends TweetSet {
@@ -117,6 +117,9 @@ class Empty extends TweetSet {
   def union(that: TweetSet): TweetSet = that
   
   def mostRetweeted: Tweet = throw new java.util.NoSuchElementException()
+  
+   def descendingByRetweet: TweetList = Nil
+
 
   /**
    * The following methods are already implemented
@@ -154,17 +157,29 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
    }
   }
   def mostRetweeted: Tweet = {
-    mostRetw(this,this.elem)
+    if(this.left.isInstanceOf[Empty]){
+    	if(this.right.isInstanceOf[Empty]){
+    		this.elem
+    	}else{
+    	  max(this.elem,this.right.mostRetweeted)
+    	}
+    }else{
+      if(this.right.isInstanceOf[Empty]){
+        max(this.elem,this.left.mostRetweeted)
+      }else{
+        max(this.elem,max(this.left.mostRetweeted,this.right.mostRetweeted))
+      }
+    }
   }
   
-  def mostRetw(that: TweetSet, max: Tweet): Tweet = {
-      if(this.elem.retweets>max.retweets){
-    	  mostRetw(right,mostRetw(left,this.elem))
-      }else{
-          mostRetw(right,mostRetw(left,max))
-      }
-  }
-
+  def max(t1: Tweet, t2:Tweet): Tweet = 
+    if (t1.retweets > t2.retweets)
+       t1
+    else
+      t2
+  
+  def descendingByRetweet: TweetList = new Cons(this.mostRetweeted,this.remove(this.mostRetweeted).descendingByRetweet)    
+      
   /**
    * The following methods are already implemented
    */
