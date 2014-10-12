@@ -43,6 +43,11 @@ class HuffmanSuite extends FunSuite {
   test("makeOrderedLeafList for some frequency table") {
     assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e',1), Leaf('t',2), Leaf('x',3)))
   }
+  
+  test("create code tree"){
+    assert(createCodeTree("someTextdiofjaioasdfasdfasdfasdfasdfasdfasdfasdefjak;dv;kaseiorhsmdfnask;efoiwhEFASDLKFNAS;DFowihe".toList).isInstanceOf[Fork])
+  }
+  
 
   test("combine of some leaf list") {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))

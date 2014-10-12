@@ -78,17 +78,22 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
-  def times(chars: List[Char]): List[(Char, Int)] = chars match {
-    case List() => List()
-    case y::Nil => List((y,1))
-    case y::ys  => {
-      val p = times(ys).find(p=>p._1 ==y)
-      p match {
-        case Some((theChar,theInt)) => times(ys).map(pair => if(pair._1==y) (pair._1,pair._2+1) else pair)
-        case None => (y,1)::times(ys)
-      }
-      
+  def times(chars: List[Char]): List[(Char, Int)] = {
+    def timesHelp(chars: List[Char], sum:List[(Char,Int)]):List[(Char,Int)] = {
+      chars match {
+	    case List() => sum
+	    case y::ys  => {
+	      val p = sum.find(p=>p._1 ==y)
+	      p match {
+	        case Some((theChar,theInt)) => timesHelp(ys,sum.map(pair => if(pair._1==y) (pair._1,pair._2+1) else pair))
+	        case None => timesHelp(ys,(y,1)::sum)
+	      }
+	    }
     }
+   
+  }
+    timesHelp(chars,List()) 
+    
   }
 
   /**
@@ -158,10 +163,7 @@ object Huffman {
    * The parameter `chars` is an arbitrary text. This function extracts the character
    * frequencies from that text and creates a code tree based on them.
    */
-  def createCodeTree(chars: List[Char]): CodeTree = chars match {
-    case List() => List().head
-  	case y::yx => until(singleton,combine)(makeOrderedLeafList(times(chars))).head
-  }
+  def createCodeTree(chars: List[Char]): CodeTree = until(singleton,combine)(makeOrderedLeafList(times(chars))).head
 
 
 
