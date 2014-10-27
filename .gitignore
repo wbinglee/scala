@@ -46,3 +46,7 @@ local.properties
  
 # PDT-specific
 .buildpath
+
+# Intellij IDE
+.idea
+*.iml
