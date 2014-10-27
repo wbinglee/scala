@@ -40,6 +40,23 @@ class AnagramsSuite extends FunSuite {
     assert(wordAnagrams("player").toSet === Set("parley", "pearly", "player", "replay"))
   }
 
+  test("combinator : List(('a', 2), ('b', 2))") {
+    val actual = combinations(List(('a', 2), ('b', 2)))
+    assert(List(
+              List(),
+              List(('a', 1)),
+              List(('a', 2)),
+              List(('b', 1)),
+              List(('a', 1), ('b', 1)),
+              List(('a', 2), ('b', 1)),
+              List(('b', 2)),
+              List(('a', 1), ('b', 2)),
+              List(('a', 2), ('b', 2))
+
+    ).forall(item => actual.contains(item)) === true)
+
+  }
+
 
 
   test("subtract: lard - r") {
