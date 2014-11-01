@@ -1,6 +1,6 @@
 package forcomp
 
-import org.scalatest.FunSuite
+import org.scalatest.{Ignore, FunSuite}
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -28,6 +28,10 @@ class AnagramsSuite extends FunSuite {
 
   test("dictionaryByOccurrences.get: eat") {
     assert(dictionaryByOccurrences.get(List(('a', 1), ('e', 1), ('t', 1))).map(_.toSet) === Some(Set("ate", "eat", "tea")))
+  }
+
+  test("dictionaryByOccurrences.get: as") {
+    assert(dictionaryByOccurrences.get(List(('a', 1), ('s', 1))).map(_.toSet) === Some(Set("as")))
   }
 
 
@@ -95,6 +99,30 @@ class AnagramsSuite extends FunSuite {
     assert(sentenceAnagrams(sentence) === List(Nil))
   }
 
+
+  test("sentence anagrams: yes man"){
+    val sentence = List("yes","man")
+    val anas = List(
+              List("en", "as", "my"),
+              List("en", "my", "as"),
+              List("man", "yes"),
+              List("men", "say"),
+              List("as", "en", "my"),
+              List("as", "my", "en"),
+              List("sane", "my"),
+              List("Sean", "my"),
+              List("my", "en", "as"),
+              List("my", "as", "en"),
+              List("my", "sane"),
+              List("my", "Sean"),
+              List("say", "men"),
+              List("yes", "man")
+    )
+    assert(sentenceAnagrams(sentence).toSet === anas.toSet)
+  }
+
+
+
   test("sentence anagrams: Linux rulez") {
     val sentence = List("Linux", "rulez")
     val anas = List(
@@ -120,6 +148,6 @@ class AnagramsSuite extends FunSuite {
       List("Linux", "rulez")
     )
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
-  }  
+  }
 
 }

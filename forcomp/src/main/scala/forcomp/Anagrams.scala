@@ -98,7 +98,6 @@ object Anagrams {
                 .toList
   }
 
-
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
    *  The precondition is that the occurrence list `y` is a subset of
@@ -109,8 +108,12 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
-
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = (y.foldLeft(x) ( (a: Occurrences, b: (Char,Int)) =>
+    a.toMap.apply(b._1)-b._2 match {
+      case 0 => (a.toMap - b._1).toList
+      case default => a.toMap.updated(b._1,a.toMap.apply(b._1)-b._2).toList
+    }
+  )).sortBy{case (c:Char, len:Int) => c}
   /** Returns a list of all anagram sentences of the given sentence.
    *  
    *  An anagram of a sentence is formed by taking the occurrences of all the characters of
@@ -151,6 +154,21 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+ def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def sentenceHelper(socc: Occurrences) : List[Sentence]  = socc match {
+      case List() => List(Nil)
+      case default => {
+        val allcombine = combinations(socc).filter(occ=>dictionaryByOccurrences.get(occ).isDefined)
+        for{
+          occ <- allcombine
+          w <- dictionaryByOccurrences.get(occ).get
+          s <- sentenceHelper(subtract(socc, occ))
+        } yield w::s
+      }
+    }
+
+    sentenceHelper(sentenceOccurrences(sentence))
+  }
+
 
 }
