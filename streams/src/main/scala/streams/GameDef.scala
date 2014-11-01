@@ -11,13 +11,21 @@ import common._
 trait GameDef {
 
   /**
+   * The position where the block is located initially.
+   *
+   * This value is left abstract, it will be defined in concrete
+   * instances of the game.
+   */
+  val startPos: Pos
+
+  /**
    * The case class `Pos` encodes positions in the terrain.
-   * 
+   *
    * IMPORTANT NOTE
    *  - The `x` coordinate denotes the position on the vertical axis
    *  - The `y` coordinate is used for the horizontal axis
    *  - The coordinates increase when moving down and right
-   * 
+   *
    * Illustration:
    *
    *     0 1 2 3   <- y axis
@@ -25,10 +33,10 @@ trait GameDef {
    *   1 o o o o
    *   2 o # o o    # is at position Pos(2, 1)
    *   3 o o o o
-   *  
+   *
    *   ^
    *   |
-   *  
+   *
    *   x axis
    */
   case class Pos(x: Int, y: Int) {
@@ -38,14 +46,6 @@ trait GameDef {
     /** The position obtained by changing the `y` coordinate by `d` */
     def dy(d: Int) = copy(y = y + d)
   }
-
-  /**
-   * The position where the block is located initially.
-   *
-   * This value is left abstract, it will be defined in concrete
-   * instances of the game.
-   */
-  val startPos: Pos
 
   /**
    * The target position where the block has to go.
