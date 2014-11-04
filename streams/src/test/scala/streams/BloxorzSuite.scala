@@ -93,6 +93,27 @@ class BloxorzSuite extends FunSuite {
     }
   }
 
+  test("done?"){
+    new Level1 {
+      assert(done(Block(Pos(4,7),Pos(4,7))))
+    }
+  }
+
+  test("neighours with history for start"){
+    new Level1 {
+      val nei = neighborsWithHistory(startBlock,List())
+      assert(nei(0)===(Block(Pos(1,2),Pos(1,3)),List(Right)))
+      assert(nei(1)===(Block(Pos(2,1),Pos(3,1)),List(Down)))
+    }
+  }
+
+//  test("stream from start"){
+//    new Level1 {
+//      pathsFromStart.foreach(e=> println(e))
+//    }
+//  }
+
+
   test("optimal solution for level 1") {
     new Level1 {
       assert(solve(solution) == Block(goal, goal))
